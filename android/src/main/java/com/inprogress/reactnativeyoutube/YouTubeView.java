@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.widget.RelativeLayout;
 
 import com.facebook.react.bridge.Arguments;
@@ -41,12 +42,15 @@ public class YouTubeView extends RelativeLayout {
     @Override
     protected void onDetachedFromWindow() {
         try {
-            FragmentManager fragmentManager = getReactContext().getCurrentActivity().getFragmentManager();
-            youTubePlayerFragment = (YouTubePlayerFragment) 
+            Activity activity = getReactContext().getCurrentActivity();
+            FragmentManager fragmentManager = activity.getFragmentManager();
+            youTubePlayerFragment = (YouTubePlayerFragment)
                     fragmentManager.findFragmentById(R.id.youtubeplayerfragment);
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.remove(youTubePlayerFragment);
             ft.commit();
+            if (youtubeController.isPlayerFullscreen())
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } catch (Exception e) {
         }
         super.onDetachedFromWindow();
