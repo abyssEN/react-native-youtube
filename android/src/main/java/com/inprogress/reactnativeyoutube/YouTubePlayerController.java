@@ -27,6 +27,7 @@ public class YouTubePlayerController implements
     private boolean loop = false;
     private boolean playInline = false;
     private boolean fullscreen = true;
+    private boolean playerFullscreen = false;
 
 
     public YouTubePlayerController(YouTubeView youTubeView) {
@@ -45,6 +46,9 @@ public class YouTubePlayerController implements
 
             // Update config
             mYouTubePlayer.setShowFullscreenButton(fullscreen);
+            mYouTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION
+                    | YouTubePlayer.FULLSCREEN_FLAG_CONTROL_SYSTEM_UI
+                    | YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE);
 
             // Emit 'onReady' event for player
             mYouTubeView.playerViewDidBecomeReady();
@@ -175,6 +179,7 @@ public class YouTubePlayerController implements
     @Override
     public void onFullscreen(boolean isFullscreen) {
         mYouTubeView.didChangeToState(isFullscreen ? "fullscreenMode" : "windowMode");
+        playerFullscreen = isFullscreen;
 
         // When exiting full-screen mode and inline playback is not enabled
         // then pause the video playback.
@@ -332,5 +337,9 @@ public class YouTubePlayerController implements
 
     public boolean isFullscreen() {
         return fullscreen;
+    }
+
+    public boolean isPlayerFullscreen() {
+        return playerFullscreen;
     }
 }
